@@ -1,4 +1,5 @@
 #include "q.h"
+#include "cart.h"
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -9,7 +10,11 @@
 
 void cleanexit(){
 
-  q_shutdown;
+  q_delete('n');
+  q_delete('s');
+  q_delete('e');
+  q_delete('w');  
+  q_shutdown;  
   exit(EXIT_FAILURE);
 }
 
@@ -48,7 +53,10 @@ int main(int argc, char** argv){
 
   if(argc == 2){
     init(argv[1]);
-
+    //q_print('n');
+    //q_print('s');
+    //q_print('e');
+    //q_print('w');
   }
   else {
     argerror();

@@ -225,6 +225,39 @@ void q_print(char dir) {
   return;
 }
 
+void q_delete(char dir) {
+  struct q_entry_t *ptr, *temp;
+
+  pthread_mutex_lock(&QLock);
+  fprintf(stderr, "Direction %c: ", dir);
+  switch (dir) {
+  case Q_NORTH:
+    ptr = northQ;
+    break;
+  case Q_SOUTH:
+    ptr = southQ;
+    break;
+  case Q_EAST:
+    ptr = eastQ;
+    break;
+  case Q_WEST:
+    ptr = westQ;
+    break;
+  }
+  if (ptr != NULL) {
+    do {
+
+      free(ptr->cart);
+      temp = ptr->next;
+      free(ptr);
+      ptr = temp;
+
+    } while (ptr != NULL);
+  }
+  fprintf(stderr, "NULL\n");
+  pthread_mutex_unlock(&QLock);
+  return;
+}
 
 void q_shutdown() {
   if ((northQ != NULL) || northCartIsWaiting)
