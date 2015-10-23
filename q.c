@@ -229,7 +229,6 @@ void q_delete(char dir) {
     struct q_entry_t *ptr, *temp;
 
     pthread_mutex_lock(&QLock);
-    fprintf(stderr, "Direction %c: ", dir);
     switch (dir) {
         case Q_NORTH:
             ptr = northQ;
@@ -254,7 +253,6 @@ void q_delete(char dir) {
 
         } while (ptr != NULL);
     }
-    fprintf(stderr, "NULL\n");
     pthread_mutex_unlock(&QLock);
     return;
 }
