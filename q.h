@@ -16,6 +16,7 @@ extern int q_cartIsWaiting(char);
 extern void q_cartHasEntered(char);
 extern void q_print(char);
 extern void q_delete(char);
+extern void q_deleteOne(char);
 extern void q_shutdown();
 
 #endif /* _Q_ */

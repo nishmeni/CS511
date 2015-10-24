@@ -91,6 +91,8 @@ struct cart_t *q_getNextCart(char dir){
   return NULL;
 }
 
+
+
 /*
  *  Get cart from head of 'dir' queue; if queue is empty return NULL
  *  Caller is responsible for freeing memory once cart_t is no longer needed.
@@ -104,28 +106,28 @@ struct cart_t *q_getCart(char dir) {
             if (northQ == NULL)
                 break;   /* jump out of switch stmt, execute unlock below */
             cart = northQ->cart;
-            northQ = northQ->next;
+            //northQ = northQ->next;
             northCartIsWaiting = 1;
             break;
         case Q_SOUTH:
             if (southQ == NULL)
                 break;   /* jump out of switch stmt, execute unlock below */
             cart = southQ->cart;
-            southQ = southQ->next;
+            //southQ = southQ->next;
             southCartIsWaiting = 1;
             break;
         case Q_EAST:
             if (eastQ == NULL)
                 break;   /* jump out of switch stmt, execute unlock below */
             cart = eastQ->cart;
-            eastQ = eastQ->next;
+            //eastQ = eastQ->next;
             eastCartIsWaiting = 1;
             break;
         case Q_WEST:
             if (westQ == NULL)
                 break;   /* jump out of switch stmt, execute unlock below */
             cart = westQ->cart;
-            westQ = westQ->next;
+            //westQ = westQ->next;
             westCartIsWaiting = 1;
             break;
     }
@@ -274,6 +276,48 @@ void q_print(char dir) {
     fprintf(stderr, "NULL\n");
     pthread_mutex_unlock(&QLock);
     return;
+}
+
+void q_deleteOne(char dir){
+  struct q_entry_t *ptr = NULL;
+
+    pthread_mutex_lock(&QLock);
+    switch (dir) {
+        case Q_NORTH:
+	  if(northQ != NULL){
+	    ptr = northQ;
+	    northQ = northQ->next;
+	  }
+	  break;
+       
+        case Q_SOUTH:
+	  if(southQ != NULL){
+	    ptr = southQ;
+	    southQ = southQ->next;
+	  }
+	  break;
+       
+        case Q_EAST:
+	  if(eastQ != NULL){
+	    ptr = eastQ;
+	    eastQ = eastQ->next;
+	  }
+	  break;
+           
+        case Q_WEST:
+	  if(westQ != NULL){
+	    ptr = westQ;
+	    westQ = westQ->next;
+	  }
+	  break;
+    }
+    
+    if(ptr != NULL){
+      free(ptr->cart);
+      free(ptr);
+    }
+    pthread_mutex_unlock(&QLock);
+    return;   
 }
 
 void q_delete(char dir) {

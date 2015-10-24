@@ -1,12 +1,12 @@
 #include "trafficmgr.h"
 
 void cleanexit() {
-    q_delete('n');
-    q_delete('s');
-    q_delete('e');
-    q_delete('w');
-    q_shutdown;
-    exit(EXIT_FAILURE);
+  q_delete('n');
+  q_delete('s');
+  q_delete('e');
+  q_delete('w');
+  q_shutdown;
+  exit(EXIT_FAILURE);
 }
 
 void argerror() {
@@ -36,7 +36,6 @@ int check_match(char *arg, char *reg) {
     
     if (!reti) {
         /* match found */
-        printf("Expression matched: %s\n", arg);
         regfree(&regex);
 	return 1;
     } else if (reti == REG_NOMATCH) {
@@ -57,21 +56,28 @@ int check_match(char *arg, char *reg) {
 void init(char* arg) {
     int i;
     q_init;
-
+    gl_env.n = 0;
+    gl_env.s = 0;
+    gl_env.e = 0;
+    gl_env.w = 0;
 
     for(i = 0; arg[i] != '\0'; i++){
         switch (arg[i]) {
 
 	    case 'n':
+	      gl_env.n = 1;
 	      q_putCart('n');
 	      break;
             case 's':
+	      gl_env.s = 1;
 	      q_putCart('s');
 	      break;
             case 'e':
+	      gl_env.e = 1;
 	      q_putCart('e');
 	      break;
             case 'w':
+	      gl_env.w = 1;
 	      q_putCart('w');
 	      break;
         }
@@ -96,6 +102,9 @@ void* cart(void* args){
     //monitor_arrive(cart); 
     //monitor_cross(cart); 
     //monitor_leave(cart); 
+
+    q_deleteOne(direction);
+
     cart = q_getCart(direction); 
   } 
   
@@ -104,13 +113,60 @@ void* cart(void* args){
 }
 
 int main(int argc, char** argv) {
+  
+  int rc;
+  arg_t n,s,e,w;
+  pthread_t north, south, east, west;
 
   if (argc == 2 && check_match(argv[1],"^[nsew]*$") > 0) {
     init(argv[1]);
+   
+    
+    if(gl_env.n){
+      n.direction = 'n'; 
+      rc = pthread_create(&north, NULL, cart, (void*)&n);
+      if(rc){
+	perror("Error creating North thread");
+	cleanexit();
+      }
+    }
+    
+    if(gl_env.s){
+      s.direction = 's';
+      rc = pthread_create(&south, NULL, cart, (void*)&s);
+      if(rc){
+	perror("Error creating South thread");
+	cleanexit();
+      }
+    }
 
+    if(gl_env.e){
+      e.direction = 'e';     
+      rc = pthread_create(&east, NULL, cart, (void*)&e);
+      if(rc){
+	perror("Error creating East thread");
+	cleanexit();
+      }
+    }
 
+    if(gl_env.w){
+      w.direction = 'w';
+      rc = pthread_create(&west, NULL, cart, (void*)&w);
+      if(rc){
+	perror("Error creating West thread");
+	cleanexit();
+      } 
+    }
 
-
+    if(gl_env.n)
+      pthread_join(north, NULL);
+    if(gl_env.s)
+      pthread_join(south, NULL);
+    if(gl_env.e)
+      pthread_join(east, NULL);
+    if(gl_env.w)
+      pthread_join(west, NULL);
+    
   } else { 
     
     argerror();
