@@ -33,6 +33,7 @@ void monitor_arrive(struct cart_t *cart) {
 	exit(EXIT_FAILURE);
     }
 
+    printf("Cart %i has arrived from direction %c\n", cart->num, cart->dir);
     switch (cart->dir) {
         case 'n':
 
@@ -84,54 +85,52 @@ void monitor_cross(struct cart_t *cart) {
 }
 
 void monitor_leave(struct cart_t *cart) {
-if (pthread_mutex_lock(&env.lock) != 0) {
-        perror("pthread_mutex_lock");
-	exit(EXIT_FAILURE);
-    }
-
-    switch (cart->dir) {
+  
+  printf("Cart %i is leaving from direction %c\n", cart->num, cart->dir);
+  
+  switch (cart->dir) {
       
        case 'n':
-	 if(q_cartIsWaiting('w'))
+	 if(!q_cartIsWaiting('w'))
 	   pthread_cond_signal(&env.west_go);
-	 else if(q_cartIsWaiting('s'))
+	 else if(!q_cartIsWaiting('s'))
 	   pthread_cond_signal(&env.south_go);
-	 else if(q_cartIsWaiting('e'))
+	 else if(!q_cartIsWaiting('e'))
 	   pthread_cond_signal(&env.east_go);
-	 else if(q_cartIsWaiting('n'))
+	 else if(!q_cartIsWaiting('n'))
 	   pthread_cond_signal(&env.north_go);
 	 break;
 
        case 's':
-	 if(q_cartIsWaiting('e'))
+	 if(!q_cartIsWaiting('e'))
 	   pthread_cond_signal(&env.east_go);
-	 else if(q_cartIsWaiting('n'))
+	 else if(!q_cartIsWaiting('n'))
 	   pthread_cond_signal(&env.north_go);
-	 else if(q_cartIsWaiting('w'))
+	 else if(!q_cartIsWaiting('w'))
 	   pthread_cond_signal(&env.west_go);
-	 else if(q_cartIsWaiting('s'))
+	 else if(!q_cartIsWaiting('s'))
 	   pthread_cond_signal(&env.south_go);
 	 break;
 	 
        case 'e':
-	 if(q_cartIsWaiting('n'))
+	 if(!q_cartIsWaiting('n'))
 	   pthread_cond_signal(&env.north_go);
-	 else if(q_cartIsWaiting('w'))
+	 else if(!q_cartIsWaiting('w'))
 	   pthread_cond_signal(&env.west_go);
-	 else if(q_cartIsWaiting('s'))
+	 else if(!q_cartIsWaiting('s'))
 	   pthread_cond_signal(&env.south_go);
-	 else if(q_cartIsWaiting('e'))
+	 else if(!q_cartIsWaiting('e'))
 	   pthread_cond_signal(&env.east_go);
 	 break;
 	 
        case 'w':
-	 if(q_cartIsWaiting('s'))
+	 if(!q_cartIsWaiting('s'))
 	   pthread_cond_signal(&env.south_go);
-	 else if(q_cartIsWaiting('e'))
+	 else if(!q_cartIsWaiting('e'))
 	   pthread_cond_signal(&env.east_go);
-	 else if(q_cartIsWaiting('n'))
+	 else if(!q_cartIsWaiting('n'))
 	   pthread_cond_signal(&env.north_go);
-	 else if(q_cartIsWaiting('w'))
+	 else if(!q_cartIsWaiting('w'))
 	   pthread_cond_signal(&env.west_go);
 	 break;
 
