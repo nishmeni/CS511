@@ -1,6 +1,12 @@
 #ifndef _MONITOR_
 #define _MONITOR_
 
+
+#include "q.h"
+#include <pthread.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 typedef struct s_glenv {
     pthread_mutex_t lock;       /* lock semaphore for controlling access to the intersection */
     pthread_cond_t north_go;    /*  */
@@ -12,9 +18,9 @@ typedef struct s_glenv {
 t_glenv env;
 
 void monitor_init();
-void monitor_arrive(cart_t *cart);
-void monitor_cross(cart_t *cart);
-void monitor_leave(cart_t *cart);
+void monitor_arrive(struct cart_t *cart);
+void monitor_cross(struct cart_t *cart);
+void monitor_leave(struct cart_t *cart);
 void monitor_shutdown();
 
 #endif
