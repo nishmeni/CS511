@@ -1,67 +1,99 @@
-#include "q.h"
-#include "cart.h"
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <semaphore.h>
+#include "traffic.h"
 
-
-void cleanexit(){
-
-  q_delete('n');
-  q_delete('s');
-  q_delete('e');
-  q_delete('w');  
-  q_shutdown;  
-  exit(EXIT_FAILURE);
+void cleanexit() {
+    q_delete('n');
+    q_delete('s');
+    q_delete('e');
+    q_delete('w');
+    q_shutdown;
+    exit(EXIT_FAILURE);
 }
 
-void argerror(){
-
-  printf("Correct Usage: ./trafficmgr <d1d2d3d4...>\n Where dn E [n,s,e,w] is the direction of the nth cart.\n");
-  cleanexit();
+void argerror() {
+    printf("Correct Usage: ./trafficmgr <d1d2d3d4...>\n Where dn E [n,s,e,w] is the direction of the nth cart.\n");
+    cleanexit();
 }
 
-void init(char* arg){
-  int i;
-  q_init;
+/*
+ *  Checks if the given string matches the defined synax for command line args
+ *
+ *  arg - string to check
+ */
+int check_match(char *arg, char *reg) {
+    regex_t regex;
+    int reti;
+    char msgbuf[100];
 
-  for(i = 0; arg[i] != '\0'; i++){
-    switch(arg[i]){
-
-    case 'n':
-      q_putCart('n');
-      break;
-    case 's':
-      q_putCart('s');
-      break;
-    case 'e':
-      q_putCart('e');
-      break;
-    case 'w':
-      q_putCart('w');
-      break;
-    default:
-      argerror();
+    /* Compile regular expression */
+    reti = regcomp(&regex, reg, 0);
+    
+    if (reti) {
+      fprintf(stderr, "Could not compile regex\n");
+      exit(1);
     }
-  }
+
+    /* Execute regular expression */
+    reti = regexec(&regex, arg, 0, NULL, 0);
+    
+    if (!reti) {
+        /* match found */
+        printf("Expression matched: %s\n", arg);
+        regfree(&regex);
+	return 1;
+    } else if (reti == REG_NOMATCH) {
+        /* no match found */
+        printf("Expression not matched: %s\n", arg);
+	regfree(&regex);
+        return -1;
+    } else {
+        /* expression match failed */
+        regerror(reti, &regex, msgbuf, sizeof(msgbuf));
+        fprintf(stderr, "Regex match failed: %s\n", msgbuf);
+        regfree(&regex);
+	exit(EXIT_FAILURE);
+    }
+    
 }
 
-int main(int argc, char** argv){
+void init(char* arg) {
+    int i;
+    q_init;
 
-  if(argc == 2){
+
+    for(i = 0; arg[i] != '\0'; i++){
+        switch (arg[i]) {
+
+            case 'n':
+                q_putCart('n');
+                break;
+            case 's':
+                q_putCart('s');
+                break;
+            case 'e':
+                q_putCart('e');
+                break;
+            case 'w':
+                q_putCart('w');
+                break;
+        }
+    }
+}
+
+int main(int argc, char** argv) {
+
+  if (argc == 2 && check_match(argv[1],"^[nsew]*$") > 0) {
     init(argv[1]);
-    //q_print('n');
-    //q_print('s');
-    //q_print('e');
-    //q_print('w');
-  }
-  else {
-    argerror();
-  }
 
-  cleanexit();
+
+    cleanexit();  
+
+  } else { 
+    
+    argerror();
+  
+  }
+  
+
+
   return 0;
 }
