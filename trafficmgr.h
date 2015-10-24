@@ -19,6 +19,7 @@ void cleanexit();
 void argerror();
 int check_match(char*, char*);
 void init(char*);
+void *cart(void*);
 
 
 #endif

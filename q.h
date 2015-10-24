@@ -10,10 +10,12 @@
 
 extern void q_init();
 extern struct cart_t *q_getCart(char);
+extern struct cart_t *q_getNextCart(char);
 extern void q_putCart(char);
 extern int q_cartIsWaiting(char);
 extern void q_cartHasEntered(char);
 extern void q_print(char);
+extern void q_delete(char);
 extern void q_shutdown();
 
 #endif /* _Q_ */
