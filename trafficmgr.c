@@ -99,12 +99,9 @@ void *cart(void* args){
 
   while (cart != NULL) {
     fprintf(stderr, "thread for direction %c gets cart %i\n", direction, cart->num);
-    //monitor_arrive(cart);
-    //monitor_cross(cart);
-    //monitor_leave(cart);
-
-    q_deleteOne(direction);
-
+    monitor_arrive(cart);
+    monitor_cross(cart);
+    monitor_leave(cart);
     cart = q_getCart(direction);
   }
 
@@ -120,7 +117,7 @@ int main(int argc, char** argv) {
 
   if (argc == 2 && check_match(argv[1],"^[nsew]*$") > 0) {
     init(argv[1]);
-
+    monitor_init();
 
     if(gl_env.n){
       n.direction = 'n';
@@ -166,6 +163,8 @@ int main(int argc, char** argv) {
       pthread_join(east, NULL);
     if(gl_env.w)
       pthread_join(west, NULL);
+
+    monitor_shutdown();
 
   } else {
 
