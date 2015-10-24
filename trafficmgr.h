@@ -1,5 +1,5 @@
-#ifndef _TRAFFIC_H_
-#define _TRAFFIC_H_
+#ifndef _TRAFFICMGR_H_
+#define _TRAFFICMGR_H_
 
 #include "q.h"
 #include "cart.h"
@@ -10,5 +10,15 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <regex.h>
+
+typedef struct arg_s {
+  char direction;
+} arg_t;
+
+void cleanexit();
+void argerror();
+int check_match(char*, char*);
+void init(char*);
+
 
 #endif

@@ -1,4 +1,4 @@
-#include "traffic.h"
+#include "trafficmgr.h"
 
 void cleanexit() {
     q_delete('n');
@@ -79,21 +79,44 @@ void init(char* arg) {
     }
 }
 
+
+
+void* cart(void* args){
+ 
+  arg_t* actual;
+  char direction;
+  actual = (arg_t*) args;
+  direction = actual->direction;
+  struct cart_t *cart;
+
+  fprintf(stderr, "thread for direction %c starts\n", direction); 
+  cart = q_getCart(direction); 
+  
+  while (cart != NULL) { 
+    fprintf(stderr, "thread for direction %c gets cart %i\n", direction, cart->num); 
+    //monitor_arrive(cart); 
+    //monitor_cross(cart); 
+    //monitor_leave(cart); 
+    cart = q_getCart(direction); 
+  } 
+  
+  fprintf(stderr, "thread for direction %c exits\n", direction);
+
+}
+
 int main(int argc, char** argv) {
 
   if (argc == 2 && check_match(argv[1],"^[nsew]*$") > 0) {
     init(argv[1]);
 
 
-    cleanexit();  
+
 
   } else { 
     
     argerror();
-  
   }
   
 
-
-  return 0;
+  cleanexit();  
 }
