@@ -16,7 +16,6 @@ void argerror() {
 
 /*
  *  Checks if the given string matches the defined synax for command line args
- *
  *  arg - string to check
  */
 int check_match(char *arg, char *reg) {
@@ -63,18 +62,18 @@ void init(char* arg) {
     for(i = 0; arg[i] != '\0'; i++){
         switch (arg[i]) {
 
-            case 'n':
-                q_putCart('n');
-                break;
+	    case 'n':
+	      q_putCart('n');
+	      break;
             case 's':
-                q_putCart('s');
-                break;
+	      q_putCart('s');
+	      break;
             case 'e':
-                q_putCart('e');
-                break;
+	      q_putCart('e');
+	      break;
             case 'w':
-                q_putCart('w');
-                break;
+	      q_putCart('w');
+	      break;
         }
     }
 }

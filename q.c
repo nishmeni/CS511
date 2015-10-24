@@ -40,6 +40,57 @@ void q_init() {
 }
 
 
+struct cart_t *q_getNextCart(char dir){
+
+  switch (dir){
+    
+       case 'n':
+	 if(q_cartIsWaiting('w'))
+	   return q_getCart('w');
+	 else if(q_cartIsWaiting('s'))
+	   return q_getCart('s');
+	 else if(q_cartIsWaiting('e'))
+	   return q_getCart('e');
+	 else if(q_cartIsWaiting('n'))
+	   return q_getCart('n');
+	 break;
+
+       case 's':
+	 if(q_cartIsWaiting('e'))
+	   return q_getCart('e');
+	 else if(q_cartIsWaiting('n'))
+	   return q_getCart('n');
+	 else if(q_cartIsWaiting('w'))
+	   return q_getCart('w');
+	 else if(q_cartIsWaiting('s'))
+	   return q_getCart('s');
+	 break;
+	 
+       case 'e':
+	 if(q_cartIsWaiting('n'))
+	   return q_getCart('n');
+	 else if(q_cartIsWaiting('w'))
+	   return q_getCart('w');
+	 else if(q_cartIsWaiting('s'))
+	   return q_getCart('s');
+	 else if(q_cartIsWaiting('e'))
+	   return q_getCart('e');
+	 break;
+	 
+       case 'w':
+	 if(q_cartIsWaiting('s'))
+	   return q_getCart('s');
+	 else if(q_cartIsWaiting('e'))
+	   return q_getCart('e');
+	 else if(q_cartIsWaiting('n'))
+	   return q_getCart('n');
+	 else if(q_cartIsWaiting('w'))
+	   return q_getCart('w');
+	 break;
+  }
+  return NULL;
+}
+
 /*
  *  Get cart from head of 'dir' queue; if queue is empty return NULL
  *  Caller is responsible for freeing memory once cart_t is no longer needed.
