@@ -8,11 +8,13 @@
 #include <stdio.h>
 
 typedef struct s_glenv {
-    pthread_mutex_t lock;       /* lock semaphore for controlling access to the intersection */
-    pthread_cond_t north_go;    /*  */
-    pthread_cond_t south_go;    /*  */
-    pthread_cond_t east_go;     /*  */
-    pthread_cond_t west_go;     /*  */
+  pthread_mutex_t lock;       /* lock semaphore for controlling access to the intersection */
+  pthread_cond_t north_go;    /*  */
+  pthread_cond_t south_go;    /*  */
+  pthread_cond_t east_go;     /*  */
+  pthread_cond_t west_go;     /*  */
+  int start;
+  char nextdir;
 } t_glenv;
 
 t_glenv env;
