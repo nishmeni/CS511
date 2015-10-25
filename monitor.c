@@ -25,7 +25,7 @@ void monitor_init() {
         exit(-1);
     }
 
-    env.start = 0;
+    env.nextdir = 'z';
 }
 
 void monitor_arrive(struct cart_t *cart) {
@@ -38,8 +38,7 @@ void monitor_arrive(struct cart_t *cart) {
 	exit(EXIT_FAILURE);
     }
     
-    if(env.start == 0){
-      env.start = 1;
+    if(env.nextdir == 'z'){
       env.nextdir = cart->dir;
     }
 
